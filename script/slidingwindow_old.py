@@ -1,7 +1,7 @@
 from scipy import signal
 import numpy as np
 
-def slidingwindow(data,W,overlap,winType = 'rect'):
+def slidingwindow(data,W,T,winType):
     
     """    
     This function computes the matrix for the sliding window analysis for dynamic functional connectivity.
@@ -15,7 +15,7 @@ def slidingwindow(data,W,overlap,winType = 'rect'):
     data: input timeseries of size m x n, where m is the number of timeseries
     and n is the length of each timeseries in samples
     W: length of each sliding window in samples
-    overlap: overlap between successive sliding windows in samples
+    T: overlap between successive sliding windows in samples
     winType: if specified as 'gauss', will implement a gaussian window, else
     will implement a rectangular window.
     
@@ -29,35 +29,24 @@ def slidingwindow(data,W,overlap,winType = 'rect'):
     else:
         win = np.ones(W) # rectangular window
 
-    # Get number of nodes
-    numParcels = np.shape(data)[1]
+    # Get number of time sries
+    numParcels = np.shape(data)[0]
     
-    # Calculate number of sliding windows [CORRECT]
-    numWindows = int(np.floor((np.shape(data)[0]-W)/(W-overlap) + 1))
+    # Calculate number of sliding windows
+    numWindows = int(np.floor((np.shape(data)[1]-W)/(W-T) + 1))
     
-    # Initialize correlation heatmap
-    FCsliding = np.zeros((numWindows,numParcels,numParcels))
+    # Creating empty 3D matrix
+    FCsliding = np.zeros((numParcels,numParcels,numWindows))
     
-    # SECTION TEST need to add empty first window
-    data1 = data
-    vals = np.empty((1, 630))
-    data1 = np.insert(data, [0], 0, axis=0)
-    
-    # Loop Correlation
-    for iter in range(1, numWindows+1):
+    for iter in range(numWindows):
         # Get first W time series
-        #ts = np.transpose(data[((iter-1)*(W-overlap)+1):((iter-1)*(W-overlap)+W+1),:])
-        ts = np.transpose(data1[((iter-1)*(W-overlap)+1):((iter-1)*(W-overlap)+W+1),:])
-        
-        # Rep matrix
-        rep_matr = np.tile(win, (numParcels, 1))
+        ts = data[:,((iter-1)*(W-T)+1):((iter-1)*(W-T)+W+1)]
         
         # Get window matrix
-        window_matrix = ts*rep_matr
+        window_matrix = ts*np.tile(win, (numParcels, 1))
         
         # Compute correlation for Wth time series 
-        FCsliding[iter-1,:,:] = np.corrcoef(window_matrix)
-        np.fill_diagonal(FCsliding[iter-1,:,:], 0)
+        FCsliding[:,:,iter] = np.corrcoef(window_matrix) 
            
     return FCsliding
         

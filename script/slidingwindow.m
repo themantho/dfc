@@ -23,12 +23,23 @@ else
     win = ones(1,W); % rectangular window
 end
 
-numParcels = size(data,1);
+% Get number of time series
+numParcels = size(data,2);
 
-numWindows = floor((size(data,2)-W)/(W-T) + 1);
-fc_swindow = zeros(numParcels,numParcels,numWindows);
+% Get number of windows
+numWindows = floor((size(data,1)-W)/(W-T) + 1);
+
+% Initialize correlation heatmap
+fc_swindow = zeros(numWindows,numParcels,numParcels);
+
+% Loop Correlation
 for iter = 1:numWindows
-    ts = data(:,...
-        ((iter-1)*(W-T)+1):((iter-1)*(W-T)+W));
-    fc_swindow(:,:,iter) = corrcoef((ts.*repmat(win,numParcels,1))');
+    
+    % Get first W time series
+    ts = data(((iter-1)*(W-T)+1):((iter-1)*(W-T)+W),:);
+    
+    % Get Rep matrix
+    rep_matr = repmat(win,numParcels,1)
+    
+    fc_swindow(iter,:,:) = corrcoef((ts.*rep_matr'));
 end

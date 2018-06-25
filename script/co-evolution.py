@@ -4,12 +4,25 @@ import numpy as np
 def coevolution(data_all, W, overlap, fc1_index, fc2_index, winType = 'rect'):
      
     """
+    This function computes the co-evolution of two networks (coupling between two networks across time series)
+    
     (1) compute all node-to-node correlations; 
     (2) Fisher r to z transform the correlations; 
     (3) extract the relevant connections (e.g., all unique pairwise DAN-DN connections) in a given window,
         and compute the average strength of fc across these connections
     (4) compute the correlation between sets of values across time 
         (e.g., mean DAN-DN core values for each time window were correlated with mean FPCN-DAN values for each time window)
+        
+    INPUT:
+    data_all: input timeseries of list size n containing a m x m matrix, where n is the number of subjects, and m is the number of nodes.
+    W: length of each sliding window in samples
+    overlap: overlap between successive sliding windows in samples
+    fc_index1: index of the first network in the matrix
+    fc_index2: index of the second network in the matrix
+    winType: if specified as 'gauss', will implement a gaussian window, else will implement a rectangular window.    
+        
+    OUTPUT:
+    co_evolve_matr: co-evolution matrix size n, with each containing w values, where w is the number of windows.
     """
 
     if winType == 'gauss':

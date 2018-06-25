@@ -11,12 +11,11 @@ def slidingwindow(data,W,overlap,winType = 'rect'):
     Then the window is shifted by a step T, and the same calculations are repeated over the time interval [1+ T, W + T]. \
     This process is iterated until the window spans the end part of the timecourses, to eventually obtain a connectivity timecourse.
     
-    INPUTS:
+    INPUT:
     data: input timeseries of list size n containing a m x m matrix, where n is the number of subjects, and m is the number of nodes.
     W: length of each sliding window in samples
     overlap: overlap between successive sliding windows in samples
-    winType: if specified as 'gauss', will implement a gaussian window, else
-    will implement a rectangular window.
+    winType: if specified as 'gauss', will implement a gaussian window, else will implement a rectangular window.
     
     OUTPUT:
     FCsliding: matrix of size m x m x p where m is the number of timeseries and p is the number of sliding windows.

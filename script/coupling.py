@@ -3,9 +3,15 @@ import pandas as pd
 
 def coupling(data_all,window):
     """
-        creates a functional coupling metric from 'data'
-        data_all: input timeseries of list size n containing a m x m matrix, where n is the number of subjects, and m is the number of nodes.
-        smooth: smoothing parameter for dynamic coupling score
+    creates a functional coupling metric from 'data'.
+    
+    INPUT:
+    data_all: input timeseries of list size n containing a m x m matrix, where n is the number of subjects, and m is the number of nodes.
+    window: window length
+    
+    OUTPUT:
+    mtd_all: Multiplication temporal derivative matrix of list size n, each containing a m x m matrix
+    sma_all: smoothed MTD of list size n, each containing a m x m matrix
     """
     
     # Initialize matrix
